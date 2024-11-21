@@ -6,17 +6,24 @@ function App() {
   const [income, setIncome] = useState(0);
   const [balance, setBalance] = useState(0);
   const [expenses, setExpenses] = useState([]);
+  const [isIncomModalOpen, setIsIncomModalOpen] = useState(false);
 
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => {
-    setIsModalOpen(true);
+  // open the income modal function
+  const openIncomModal = () => {
+    setIsIncomModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+// close income modal function  
+  const handleIncomModalClose = () => {
+    setIsIncomModalOpen(false);
   };
+
+  // add income 
+  const handleIncome = (amount) => {
+    // es6 +amount is converting string amount to number
+    setIncome(income +  +amount);
+    handleIncomModalClose();
+  }
 
 
 
@@ -28,15 +35,15 @@ function App() {
           <div className='row'>
             <div className='col-md-6 text-center'>
               <h3>Amount In</h3>
-              <h5 className='text-success'>$50000</h5>
-              <button className='btn btn-success' onClick={openModal}>Add Income</button>
+              <h5 className='text-success'>${income}</h5>
+              <button className='btn btn-success' onClick={openIncomModal}>Add Income</button>
 
-              <IncomeModal show={isModalOpen} handleClose={closeModal} /> 
+              <IncomeModal handleIncome={handleIncome} isIncomModalOpen={isIncomModalOpen} handleIncomModalClose={handleIncomModalClose} /> 
 
             </div>
             <div className='col-md-6 text-center'>
               <h3>Balance</h3>
-              <h5 className='text-danger'>$5000</h5>
+              <h5 className='text-danger'>${balance}</h5>
               <button className='btn btn-danger'>Add Expense</button>
             </div>
           </div>
