@@ -21,15 +21,15 @@ function App() {
     setIsIncomModalOpen(false);
   };
 
-    // open the expense modal function
-    const openExpenseModal = () => {
-      setIsExpenseModalOpen(true);
-    };
-  
-    // close income modal function  
-    const closeExpenseModal = () => {
-      setIsExpenseModalOpen(false);
-    };
+  // open the expense modal function
+  const openExpenseModal = () => {
+    setIsExpenseModalOpen(true);
+  };
+
+  // close income modal function  
+  const closeExpenseModal = () => {
+    setIsExpenseModalOpen(false);
+  };
 
   // add income 
   const handleIncome = (amount) => {
@@ -40,12 +40,15 @@ function App() {
 
 
   // add expense func
-  const addExpense = (expense) => {
-    const newExpAr = [...expenses, expense];
+  const addExpense = (expeseObj) => {
+    const newExpAr = [...expenses, expeseObj];
+    
+    // update remaining balance
+    setBalance(income - expeseObj.expense)
     setExpenses(newExpAr);
   }
 
-console.log(expenses);
+
 
   return (
     <>
@@ -86,12 +89,18 @@ console.log(expenses);
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>01/01/2023</td>
-                <td>Payment</td>
-                <td>Salary</td>
-                <td>$5000</td>
-              </tr>
+              {
+                expenses.map((exp, i) => {
+                  return (
+                    <tr key={i}>
+                      <td>{exp.date}</td>
+                      <td>{exp.detail}</td>
+                      <td>{exp.category}</td>
+                      <td>${exp.expense}</td>
+                    </tr>
+                  )
+                })
+              }
             </tbody>
           </table>
         </div>
