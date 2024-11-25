@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import IncomeModal from './components/IncomeModal'
 import ExpenseModal from './components/ExpenseModal';
@@ -44,10 +44,22 @@ function App() {
     const newExpAr = [...expenses, expeseObj];
     
     // update remaining balance
-    setBalance(income - expeseObj.expense)
     setExpenses(newExpAr);
   }
 
+
+  useEffect( () => {
+    // calculations
+    let totalExp = 0;
+
+    expenses.forEach( (exp) => {
+      totalExp +=  +exp.expense;
+    });
+    
+    setBalance(income - totalExp);
+    setTotalExpense(totalExp);
+
+  }, [expenses, income] );
 
 
   return (
