@@ -5,10 +5,18 @@ import ExpenseModal from './components/ExpenseModal';
 import ExpenseCard from './components/ExpenseCard';
 
 function App() {
-  const [income, setIncome] = useState(0);
+    // Initialize states directly from localStorage
+    const [income, setIncome] = useState(() => {
+      const storedIncome = localStorage.getItem('income');
+      return storedIncome ? JSON.parse(storedIncome) : 0;
+    });
+    const [expenses, setExpenses] = useState(() => {
+      const storedExpenses = localStorage.getItem('expenses');
+      return storedExpenses ? JSON.parse(storedExpenses) : [];
+    });
+
   const [balance, setBalance] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
-  const [expenses, setExpenses] = useState([]);
   const [isIncomModalOpen, setIsIncomModalOpen] = useState(false);
 
   // expense modal state
@@ -49,17 +57,20 @@ function App() {
     setExpenses([...expenses, expenseObj]);
   }
 
-  useEffect( () => {
-       // update total expenses
-       let totalExpense = 0;
-       expenses.forEach((e) => {
-         totalExpense += +e.expense;
-       });
-        // update remaining balance
-       setBalance(income - +totalExpense);
-       setTotalExpense(totalExpense);
-       console.log("totalExp", totalExpense);
-  }, [expenses]);
+useEffect(() => {
+    // update total expenses
+    let totalExpense = 0;
+    expenses.forEach((e) => {
+      totalExpense += +e.expense;
+    });
+    // update remaining balance
+    setBalance(income - +totalExpense);
+    setTotalExpense(totalExpense);
+
+    localStorage.setItem('income', JSON.stringify(income));
+    localStorage.setItem('expenses', JSON.stringify(expenses));
+
+  }, [expenses, income]);
 
 
   return (
@@ -100,9 +111,9 @@ function App() {
             </thead>
             <tbody>
               {
-                expenses.map( (ex, i) => {
-                  return(
-                    <ExpenseCard ex={ex}  key={i} />
+                expenses.map((ex, i) => {
+                  return (
+                    <ExpenseCard ex={ex} key={i} />
                   )
                 })
               }
