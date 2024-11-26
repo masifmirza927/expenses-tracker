@@ -4,10 +4,18 @@ import IncomeModal from './components/IncomeModal'
 import ExpenseModal from './components/ExpenseModal';
 
 function App() {
-  const [income, setIncome] = useState(0);
+  const [income, setIncome] = useState(() => {
+    const storedIncome = JSON.parse(localStorage.getItem("income"));
+    return (storedIncome) ? storedIncome : 0;
+  });
+  const [expenses, setExpenses] = useState( () => {
+    const storedExpenses = JSON.parse(localStorage.getItem("expenses"));
+    return (storedExpenses) ? storedExpenses : [];
+  });
+
+
   const [balance, setBalance] = useState(0);
   const [totalExpense, setTotalExpense] = useState(0);
-  const [expenses, setExpenses] = useState([]);
   const [isIncomModalOpen, setIsIncomModalOpen] = useState(false);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
 
@@ -42,24 +50,36 @@ function App() {
   // add expense func
   const addExpense = (expeseObj) => {
     const newExpAr = [...expenses, expeseObj];
-    
+
     // update remaining balance
     setExpenses(newExpAr);
+
+    // close 
+    closeExpenseModal();
   }
 
+  // delete expense
+  const delteExpense = (index) => {
+    const remainingExpenses = expenses.filter((elem, i) => i != index);
+    setExpenses(remainingExpenses);
+  }
 
-  useEffect( () => {
+  useEffect(() => {
     // calculations
     let totalExp = 0;
 
-    expenses.forEach( (exp) => {
-      totalExp +=  +exp.expense;
+    expenses.forEach((exp) => {
+      totalExp += +exp.expense;
     });
-    
+
     setBalance(income - totalExp);
     setTotalExpense(totalExp);
 
-  }, [expenses, income] );
+    // save in local storage
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+    localStorage.setItem("income", JSON.stringify(income));
+
+  }, [expenses, income]);
 
 
   return (
@@ -98,6 +118,7 @@ function App() {
                 <th>Description</th>
                 <th>Category</th>
                 <th>Amount</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -109,6 +130,7 @@ function App() {
                       <td>{exp.detail}</td>
                       <td>{exp.category}</td>
                       <td>${exp.expense}</td>
+                      <td><button onClick={() => { delteExpense(i) }} className='btn btn-sm btn-danger'>Delete</button></td>
                     </tr>
                   )
                 })
