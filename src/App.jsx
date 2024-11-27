@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import IncomeModal from './components/IncomeModal'
 import ExpenseModal from './components/ExpenseModal';
+import { Flip, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [income, setIncome] = useState(() => {
     const storedIncome = JSON.parse(localStorage.getItem("income"));
     return (storedIncome) ? storedIncome : 0;
   });
-  const [expenses, setExpenses] = useState( () => {
+  const [expenses, setExpenses] = useState(() => {
     const storedExpenses = JSON.parse(localStorage.getItem("expenses"));
     return (storedExpenses) ? storedExpenses : [];
   });
@@ -18,6 +20,14 @@ function App() {
   const [totalExpense, setTotalExpense] = useState(0);
   const [isIncomModalOpen, setIsIncomModalOpen] = useState(false);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+
+
+  const deleteNotify = () => toast.success("Successfully deleted !", {
+    transition: Flip,
+    autoClose: 500,
+    pauseOnHover: true,
+  });
+
 
   // open the income modal function
   const openIncomModal = () => {
@@ -62,6 +72,7 @@ function App() {
   const delteExpense = (index) => {
     const remainingExpenses = expenses.filter((elem, i) => i != index);
     setExpenses(remainingExpenses);
+    deleteNotify();
   }
 
   useEffect(() => {
@@ -139,6 +150,7 @@ function App() {
           </table>
         </div>
       </div>
+      <ToastContainer/>
     </>
   )
 }
