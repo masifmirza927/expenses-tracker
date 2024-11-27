@@ -97,7 +97,7 @@ function App() {
     <>
       <div className='container'>
         <div className='bg-dark text-white p-3'>
-          <h1 className='text-center mb-5'>Expense Tracker</h1>
+          <h1 className='text-center mb-5'>Expense Tracker App</h1>
           <div className='row'>
             <div className='col-md-4 text-center'>
               <h3>Amount In</h3>
